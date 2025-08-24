@@ -78,15 +78,20 @@
         .delete-project-btn svg { width: 22px; height: 22px; color: var(--border-color); transition: color 0.2s; }
         .delete-project-btn:hover svg { color: var(--primary-color); }
 
-        .project-card-body { padding: 0 20px 20px 20px; flex-grow: 1; }
+        .project-card-body { padding: 0 20px 20px 20px; flex-grow: 1; overflow: hidden; }
         .project-section { margin-top: 25px; }
         .project-section h4 { color: var(--text-color); font-weight: 500; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
         .project-section h4 svg { width: 20px; height: 20px; color: var(--primary-color); }
 
-        .project-section ul { list-style: none; padding-left: 0; }
+        .task-list-container, .progress-log-container {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .task-list { list-style: none; padding-left: 0; }
         .task-list li { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
         .task-list li.completed span { text-decoration: line-through; color: var(--subtle-text-color); }
-        .task-list input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--border-color); border-radius: 4px; cursor: pointer; margin-right: 12px; position: relative; display: inline-block; vertical-align: middle; }
+        .task-list input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--border-color); border-radius: 4px; cursor: pointer; margin-right: 12px; position: relative; display: inline-block; vertical-align: middle; flex-shrink: 0;}
         .task-list input[type="checkbox"]:checked { background-color: var(--primary-color); border-color: var(--primary-color); }
         .task-list input[type="checkbox"]:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
@@ -95,35 +100,36 @@
         .text-input:focus { outline: none; }
         .add-btn { padding: 6px 16px; border: none; background: var(--primary-color); color: white; border-radius: 50px; cursor: pointer; transition: background 0.2s; }
 
-        .progress-log .entry { margin-bottom: 15px; }
-        .progress-log .entry strong { font-weight: 600; display: block; color: var(--text-color); font-size: 1rem; }
-        .progress-log .entry p { font-size: 14px; color: var(--subtle-text-color); word-wrap: break-word; }
+        .progress-log-container .entry { margin-bottom: 15px; }
+        .progress-log-container .entry strong { font-weight: 600; display: block; color: var(--text-color); font-size: 1rem; }
+        .progress-log-container .entry p { font-size: 14px; color: var(--subtle-text-color); word-wrap: break-word; }
 
-        /* --- Status Menu (NEW) --- */
-        .status-menu {
-            position: absolute;
-            top: 40px; left: 15px;
-            background-color: var(--surface-color);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            padding: 5px;
-            z-index: 10;
-            border: 1px solid var(--border-color);
-            opacity: 0;
-            transform: translateY(10px);
-            transition: opacity 0.2s, transform 0.2s;
-            pointer-events: none;
+        /* --- NEW: Custom Scrollbar Styling --- */
+        .task-list-container::-webkit-scrollbar,
+        .progress-log-container::-webkit-scrollbar {
+            width: 8px;
         }
+        .task-list-container::-webkit-scrollbar-track,
+        .progress-log-container::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .task-list-container::-webkit-scrollbar-thumb,
+        .progress-log-container::-webkit-scrollbar-thumb {
+            background-color: #555;
+            border-radius: 10px;
+            border: 2px solid var(--surface-color);
+        }
+        .task-list-container::-webkit-scrollbar-thumb:hover,
+        .progress-log-container::-webkit-scrollbar-thumb:hover {
+            background-color: #777;
+        }
+
+        .status-menu { position: absolute; top: 40px; left: 15px; background-color: var(--surface-color); border-radius: 8px; box-shadow: var(--shadow); padding: 5px; z-index: 10; border: 1px solid var(--border-color); opacity: 0; transform: translateY(10px); transition: opacity 0.2s, transform 0.2s; pointer-events: none; }
         .status-menu.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-        .status-menu-item {
-            display: flex; align-items: center; gap: 8px;
-            padding: 8px 12px; border-radius: 6px; cursor: pointer;
-            white-space: nowrap;
-        }
+        .status-menu-item { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: 6px; cursor: pointer; white-space: nowrap; }
         .status-menu-item:hover { background-color: var(--bg-color); }
         .status-menu-item .dot { width: 8px; height: 8px; border-radius: 50%; }
 
-        /* Modal Styles */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(5px); justify-content: center; align-items: center; }
         .modal-content { background-color: var(--surface-color); padding: 30px; border-radius: 15px; width: 90%; max-width: 500px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: slide-down 0.3s ease-out; }
         @keyframes slide-down { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -165,7 +171,6 @@
         <main id="project-dashboard"></main>
     </div>
 
-    <!-- Add Project Modal -->
     <div id="add-project-modal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -185,7 +190,7 @@
 
     <script>
         (() => {
-            const icons = { /* SVG Icons remain the same */
+            const icons = {
                 sun: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z" /></svg>`,
                 moon: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z" /></svg>`,
                 trash: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.124-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.077-2.09.921-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" /></svg>`,
@@ -247,9 +252,9 @@
 
                     card.innerHTML = `
                         <div class="status-menu">
-                            <div class="status-menu-item" data-status="active"><span class="dot status-active"></span>Active</div>
-                            <div class="status-menu-item" data-status="on-hold"><span class="dot status-on-hold"></span>On Hold</div>
-                            <div class="status-menu-item" data-status="completed"><span class="dot status-completed"></span>Completed</div>
+                            <div class="status-menu-item" data-status="active"><span class="dot" style="background-color: var(--info-color);"></span>Active</div>
+                            <div class="status-menu-item" data-status="on-hold"><span class="dot" style="background-color: var(--warning-color);"></span>On Hold</div>
+                            <div class="status-menu-item" data-status="completed"><span class="dot" style="background-color: var(--success-color);"></span>Completed</div>
                         </div>
                         <div class="project-card-header">
                             <div class="title-group">
@@ -262,8 +267,16 @@
                             <button class="delete-project-btn" title="Delete Project">${icons.trash}</button>
                         </div>
                         <div class="project-card-body">
-                            <div class="project-section"><h4>${icons.tasks} Task List</h4><ul class="task-list">${tasksHTML}</ul><form class="input-form"><input type="text" class="text-input task-input" placeholder="Add a new task..." required><button type="submit" class="add-btn">Add</button></form></div>
-                            <div class="project-section"><h4>${icons.progress} Progress Log</h4><div class="progress-log">${progressHTML || '<p style="font-size: 14px; color: var(--subtle-text-color);">No progress logged yet.</p>'}</div><form class="input-form"><input type="text" class="text-input progress-input" placeholder="Log your progress..." required><button type="submit" class="add-btn">Log</button></form></div>
+                            <div class="project-section">
+                                <h4>${icons.tasks} Task List</h4>
+                                <div class="task-list-container"><ul class="task-list">${tasksHTML}</ul></div>
+                                <form class="input-form task-form"><input type="text" class="text-input" placeholder="Add a new task..." required><button type="submit" class="add-btn">Add</button></form>
+                            </div>
+                            <div class="project-section">
+                                <h4>${icons.progress} Progress Log</h4>
+                                <div class="progress-log-container">${progressHTML || '<p style="font-size: 14px; color: var(--subtle-text-color);">No progress logged yet.</p>'}</div>
+                                <form class="input-form progress-form"><input type="text" class="text-input" placeholder="Log your progress..." required><button type="submit" class="add-btn">Log</button></form>
+                            </div>
                         </div>
                     `;
                     projectDashboard.appendChild(card);
@@ -279,13 +292,9 @@
 
                 addProjectBtn.addEventListener('click', () => modal.style.display = 'flex');
                 closeModalBtn.addEventListener('click', () => modal.style.display = 'none');
-
-                // Close modal or status menus on outside click
                 window.addEventListener('click', e => {
                     if (e.target == modal) modal.style.display = 'none';
-                    if (!e.target.closest('.status-dot')) {
-                        closeAllStatusMenus();
-                    }
+                    if (!e.target.closest('.status-dot')) closeAllStatusMenus();
                 });
 
                 newProjectForm.addEventListener('submit', e => {
@@ -318,17 +327,15 @@
                     if (!card) return;
                     const project = projects.find(p => p.id === parseInt(card.dataset.id));
 
-                    // Status Menu Logic
                     if (e.target.classList.contains('status-dot')) {
-                        e.stopPropagation(); // Prevent window click from closing it immediately
+                        e.stopPropagation();
                         const menu = card.querySelector('.status-menu');
                         const isVisible = menu.classList.contains('visible');
-                        closeAllStatusMenus(); // Close others before opening a new one
+                        closeAllStatusMenus();
                         if (!isVisible) menu.classList.add('visible');
                     } else if (e.target.closest('.status-menu-item')) {
                         project.status = e.target.closest('.status-menu-item').dataset.status;
-                        saveProjects();
-                        renderProjects();
+                        saveProjects(); renderProjects();
                     } else if (e.target.type === 'checkbox') {
                         const taskItem = e.target.closest('li');
                         const taskIndex = parseInt(taskItem.dataset.taskIndex);
@@ -351,9 +358,9 @@
                     const input = e.target.querySelector('.text-input');
                     if (!input || !input.value.trim()) return;
 
-                    if (input.classList.contains('task-input')) {
+                    if (e.target.classList.contains('task-form')) {
                         project.tasks.push({ text: input.value, completed: false });
-                    } else if (input.classList.contains('progress-input')) {
+                    } else if (e.target.classList.contains('progress-form')) {
                         const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                         project.progress.unshift({ date: today, note: input.value });
                     }
@@ -375,7 +382,6 @@
                 });
 
                 importBtn.addEventListener('click', () => importFileInput.click());
-
                 importFileInput.addEventListener('change', e => {
                     const file = e.target.files[0]; if (!file) return;
                     const reader = new FileReader();
@@ -397,7 +403,7 @@
             const init = () => {
                 importBtn.innerHTML = icons.import;
                 exportBtn.innerHTML = icons.export;
-                applyTheme(localStorage.getItem('hobbyTheme') || 'light');
+                applyTheme(localStorage.getItem('hobbyTheme') || 'dark'); // Default to dark theme
                 setupEventListeners();
                 renderProjects();
             };
