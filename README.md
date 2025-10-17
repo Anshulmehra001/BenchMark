@@ -1,6 +1,8 @@
-BENCHMARK: Your Creative Project Tracker
+# BENCHMARK: Your Creative Project Tracker
 
-A beautiful, simple, and powerful single-page application for tracking your personal hobbies and creative projects. BENCHMARK runs entirely in your browser, requires no setup, and keeps all your data private on your own machine.  
+🌐 **[Live Demo](https://anshulmehra001.github.io/BenchMark/)**
+
+A beautiful, simple, and powerful single-page application for tracking your personal hobbies and creative projects. BENCHMARK runs entirely in your browser, requires no setup, and keeps all your data private on your own machine.
 
 ✨ Core Features
 
