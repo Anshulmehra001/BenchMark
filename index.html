@@ -73,6 +73,45 @@
         .status-dot.status-completed { background-color: var(--success-color); }
         .project-card-header h3 { font-family: 'Poppins', sans-serif; font-weight: 600; font-size: 1.5rem; margin: 0; color: var(--text-color); }
         .project-card-header .category { background-color: var(--secondary-color); color: white; padding: 2px 10px; border-radius: 50px; font-size: 12px; font-weight: 500; display: inline-block; margin-top: 4px; }
+        
+        /* Edit functionality styles */
+        .editable-container { position: relative; display: flex; align-items: center; gap: 8px; }
+        .edit-btn { background: none; border: none; padding: 4px; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
+        .project-card:hover .edit-btn { opacity: 1; }
+        .edit-btn svg { width: 16px; height: 16px; color: var(--subtle-text-color); }
+        .edit-btn:hover svg { color: var(--primary-color); }
+        
+        .inline-edit { display: none; }
+        .inline-edit input { background: var(--input-bg); border: 1px solid var(--primary-color); border-radius: 4px; padding: 4px 8px; font-size: inherit; font-weight: inherit; color: var(--text-color); }
+        .inline-edit.editing { display: flex; align-items: center; gap: 6px; }
+        .inline-edit.editing + .editable-text { display: none; }
+        
+        .edit-controls { display: flex; gap: 4px; }
+        .edit-controls button { background: none; border: none; padding: 2px; cursor: pointer; }
+        .edit-controls button svg { width: 14px; height: 14px; }
+        .save-edit svg { color: var(--success-color); }
+        .cancel-edit svg { color: var(--subtle-text-color); }
+        
+        .task-item-container { display: flex; align-items: flex-start; justify-content: space-between; width: 100%; }
+        .task-text-container { display: flex; align-items: flex-start; flex-grow: 1; }
+        .task-controls { display: flex; gap: 4px; align-items: flex-start; margin-top: 8px; }
+        .task-edit-btn, .task-delete-btn { opacity: 0; transition: opacity 0.2s; }
+        .task-list li:hover .task-edit-btn, .task-list li:hover .task-delete-btn { opacity: 1; }
+        .task-delete-btn svg { color: var(--border-color); }
+        .task-delete-btn:hover svg { color: var(--primary-color); }
+        
+        .task-edit-form { display: none; flex-direction: column; gap: 8px; flex-grow: 1; margin-left: 12px; }
+        .task-edit-form.editing { display: flex; }
+        .task-edit-form.editing + .task-content { display: none; }
+        .task-edit-inputs { display: flex; gap: 8px; align-items: center; }
+        .task-edit-inputs input[type="text"] { flex-grow: 1; padding: 4px 8px; border: 1px solid var(--primary-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color); font-size: 14px; }
+        .task-edit-inputs input[type="date"] { padding: 4px 8px; border: 1px solid var(--border-color); border-radius: 4px; background: var(--input-bg); color: var(--text-color); font-size: 12px; }
+        
+        .progress-entry-container { position: relative; }
+        .progress-edit-controls { position: absolute; top: 5px; right: 5px; opacity: 0; transition: opacity 0.2s; display: flex; gap: 4px; }
+        .progress-entry-container:hover .progress-edit-controls { opacity: 1; }
+        .progress-delete-btn svg { color: var(--border-color); }
+        .progress-delete-btn:hover svg { color: var(--primary-color); }
         .delete-project-btn { background: none; border: none; padding: 0; cursor: pointer; opacity: 0; transition: opacity 0.2s; }
         .project-card:hover .delete-project-btn { opacity: 1; }
         .delete-project-btn svg { width: 22px; height: 22px; color: var(--border-color); transition: color 0.2s; }
@@ -91,13 +130,23 @@
         .task-list { list-style: none; padding-left: 0; }
         .task-list li { display: flex; align-items: center; margin-bottom: 10px; cursor: pointer; }
         .task-list li.completed span { text-decoration: line-through; color: var(--subtle-text-color); }
-        .task-list input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--border-color); border-radius: 4px; cursor: pointer; margin-right: 12px; position: relative; display: inline-block; vertical-align: middle; flex-shrink: 0;}
+        .task-content { display: flex; flex-direction: column; flex-grow: 1; margin-left: 12px; }
+        .task-text { font-size: 14px; color: var(--text-color); }
+        .task-date { font-size: 11px; color: var(--subtle-text-color); margin-top: 2px; display: flex; align-items: center; gap: 4px; }
+        .task-date svg { width: 12px; height: 12px; }
+        .task-date.overdue { color: var(--primary-color); font-weight: 500; }
+        .task-date.today { color: var(--warning-color); font-weight: 500; }
+        .task-list input[type="checkbox"] { appearance: none; -webkit-appearance: none; width: 18px; height: 18px; border: 1.5px solid var(--border-color); border-radius: 4px; cursor: pointer; margin-right: 0; position: relative; display: inline-block; vertical-align: middle; flex-shrink: 0;}
         .task-list input[type="checkbox"]:checked { background-color: var(--primary-color); border-color: var(--primary-color); }
         .task-list input[type="checkbox"]:checked::after { content: ''; position: absolute; left: 5px; top: 1px; width: 4px; height: 8px; border: solid white; border-width: 0 2px 2px 0; transform: rotate(45deg); }
 
-        .input-form { display: flex; align-items: center; margin-top: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; }
+        .input-form { display: flex; align-items: center; margin-top: 15px; border-bottom: 1px solid var(--border-color); padding-bottom: 5px; gap: 10px; }
         .text-input { flex-grow: 1; border: none; background: none; padding: 8px 0; color: var(--text-color); font-size: 14px; }
         .text-input:focus { outline: none; }
+        .date-input { border: 1px solid var(--border-color); background: var(--surface-color); color: var(--text-color); padding: 6px 10px; border-radius: 8px; font-size: 12px; min-width: 120px; cursor: pointer; transition: border-color 0.2s; }
+        .date-input:focus { outline: none; border-color: var(--primary-color); }
+        .date-input::-webkit-calendar-picker-indicator { filter: invert(0.5); cursor: pointer; }
+        body.dark-mode .date-input::-webkit-calendar-picker-indicator { filter: invert(1); }
         .add-btn { padding: 6px 16px; border: none; background: var(--primary-color); color: white; border-radius: 50px; cursor: pointer; transition: background 0.2s; }
 
         .progress-log-container .entry { margin-bottom: 15px; }
@@ -198,7 +247,11 @@
                 export: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" /></svg>`,
                 empty: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>`,
                 tasks: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.052-.143z" clip-rule="evenodd" /></svg>`,
-                progress: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" /><path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" /></svg>`
+                progress: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M5.433 13.917l1.262-3.155A4 4 0 017.58 9.42l6.92-6.918a2.121 2.121 0 013 3l-6.92 6.918c-.383.383-.84.685-1.343.886l-3.154 1.262a.5.5 0 01-.65-.65z" /><path d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" /></svg>`,
+                edit: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" /></svg>`,
+                save: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12.75l6 6 9-13.5" /></svg>`,
+                cancel: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>`,
+                calendar: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 012.25-2.25h13.5A2.25 2.25 0 0121 7.5v11.25m-18 0A2.25 2.25 0 005.25 21h13.5a2.25 2.25 0 002.25-2.25m-18 0v-7.5A2.25 2.25 0 015.25 9h13.5a2.25 2.25 0 012.25 2.25v7.5" /></svg>`
             };
 
             const [
@@ -214,6 +267,34 @@
 
             const saveProjects = () => localStorage.setItem('hobbyProjects', JSON.stringify(projects));
             const escapeHTML = str => { const p = document.createElement('p'); p.textContent = str; return p.innerHTML; };
+
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(today.getDate() + 1);
+                
+                if (date.toDateString() === today.toDateString()) {
+                    return 'Today';
+                } else if (date.toDateString() === tomorrow.toDateString()) {
+                    return 'Tomorrow';
+                } else {
+                    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+                }
+            };
+
+            const getDateClass = (dateStr) => {
+                if (!dateStr) return '';
+                const date = new Date(dateStr);
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+                date.setHours(0, 0, 0, 0);
+                
+                if (date < today) return 'overdue';
+                if (date.getTime() === today.getTime()) return 'today';
+                return '';
+            };
 
             const applyTheme = (theme) => {
                 document.body.classList.toggle('dark-mode', theme === 'dark');
@@ -242,13 +323,60 @@
                     card.className = `project-card status-${project.status}`;
                     card.dataset.id = project.id;
 
-                    const tasksHTML = project.tasks.map((task, taskIndex) => `
+                    const tasksHTML = project.tasks.map((task, taskIndex) => {
+                        const dateClass = getDateClass(task.date);
+                        const formattedDate = formatDate(task.date);
+                        return `
                         <li class="${task.completed ? 'completed' : ''}" data-task-index="${taskIndex}">
-                            <input type="checkbox" ${task.completed ? 'checked' : ''}><span>${escapeHTML(task.text)}</span>
-                        </li>`).join('');
+                            <div class="task-item-container">
+                                <div class="task-text-container">
+                                    <input type="checkbox" ${task.completed ? 'checked' : ''}>
+                                    <div class="task-content">
+                                        <div class="task-text">${escapeHTML(task.text)}</div>
+                                        ${task.date ? `<div class="task-date ${dateClass}">${icons.calendar} ${formattedDate}</div>` : ''}
+                                    </div>
+                                    <div class="task-edit-form">
+                                        <div class="task-edit-inputs">
+                                            <input type="text" value="${escapeHTML(task.text)}" placeholder="Task description">
+                                            <input type="date" value="${task.date || ''}" title="Due date">
+                                        </div>
+                                        <div class="edit-controls">
+                                            <button class="save-edit" title="Save">${icons.save}</button>
+                                            <button class="cancel-edit" title="Cancel">${icons.cancel}</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="task-controls">
+                                    <button class="edit-btn task-edit-btn" title="Edit Task">${icons.edit}</button>
+                                    <button class="edit-btn task-delete-btn" title="Delete Task">${icons.trash}</button>
+                                </div>
+                            </div>
+                        </li>`;
+                    }).join('');
 
-                    const progressHTML = project.progress.map(entry => `
-                        <div class="entry"><strong>${escapeHTML(entry.date)}</strong><p>${escapeHTML(entry.note)}</p></div>`).join('');
+                    const progressHTML = project.progress.map((entry, entryIndex) => `
+                        <div class="entry progress-entry-container" data-entry-index="${entryIndex}">
+                            <div class="progress-edit-controls">
+                                <button class="edit-btn progress-edit-btn" title="Edit Entry">${icons.edit}</button>
+                                <button class="edit-btn progress-delete-btn" title="Delete Entry">${icons.trash}</button>
+                            </div>
+                            <strong class="editable-text">${escapeHTML(entry.date)}</strong>
+                            <div class="inline-edit">
+                                <input type="text" value="${escapeHTML(entry.date)}">
+                                <div class="edit-controls">
+                                    <button class="save-edit" title="Save">${icons.save}</button>
+                                    <button class="cancel-edit" title="Cancel">${icons.cancel}</button>
+                                </div>
+                            </div>
+                            <p class="editable-text">${escapeHTML(entry.note)}</p>
+                            <div class="inline-edit">
+                                <input type="text" value="${escapeHTML(entry.note)}">
+                                <div class="edit-controls">
+                                    <button class="save-edit" title="Save">${icons.save}</button>
+                                    <button class="cancel-edit" title="Cancel">${icons.cancel}</button>
+                                </div>
+                            </div>
+                        </div>`).join('');
 
                     card.innerHTML = `
                         <div class="status-menu">
@@ -260,8 +388,28 @@
                             <div class="title-group">
                                 <span class="status-dot status-${project.status}" title="Click to change status"></span>
                                 <div>
-                                    <h3>${escapeHTML(project.name)}</h3>
-                                    <span class="category">${escapeHTML(project.category)}</span>
+                                    <div class="editable-container">
+                                        <h3 class="editable-text">${escapeHTML(project.name)}</h3>
+                                        <div class="inline-edit">
+                                            <input type="text" value="${escapeHTML(project.name)}">
+                                            <div class="edit-controls">
+                                                <button class="save-edit" title="Save">${icons.save}</button>
+                                                <button class="cancel-edit" title="Cancel">${icons.cancel}</button>
+                                            </div>
+                                        </div>
+                                        <button class="edit-btn project-name-edit" title="Edit Project Name">${icons.edit}</button>
+                                    </div>
+                                    <div class="editable-container">
+                                        <span class="category editable-text">${escapeHTML(project.category)}</span>
+                                        <div class="inline-edit">
+                                            <input type="text" value="${escapeHTML(project.category)}">
+                                            <div class="edit-controls">
+                                                <button class="save-edit" title="Save">${icons.save}</button>
+                                                <button class="cancel-edit" title="Cancel">${icons.cancel}</button>
+                                            </div>
+                                        </div>
+                                        <button class="edit-btn project-category-edit" title="Edit Category">${icons.edit}</button>
+                                    </div>
                                 </div>
                             </div>
                             <button class="delete-project-btn" title="Delete Project">${icons.trash}</button>
@@ -270,7 +418,11 @@
                             <div class="project-section">
                                 <h4>${icons.tasks} Task List</h4>
                                 <div class="task-list-container"><ul class="task-list">${tasksHTML}</ul></div>
-                                <form class="input-form task-form"><input type="text" class="text-input" placeholder="Add a new task..." required><button type="submit" class="add-btn">Add</button></form>
+                                <form class="input-form task-form">
+                                    <input type="text" class="text-input" placeholder="Add a new task..." required>
+                                    <input type="date" class="date-input" title="Due date (optional)">
+                                    <button type="submit" class="add-btn">Add</button>
+                                </form>
                             </div>
                             <div class="project-section">
                                 <h4>${icons.progress} Progress Log</h4>
@@ -348,6 +500,40 @@
                             saveProjects(); renderProjects();
                         }
                     }
+                    // Edit functionality
+                    else if (e.target.closest('.project-name-edit')) {
+                        startInlineEdit(e.target.closest('.editable-container'), 'name', project);
+                    } else if (e.target.closest('.project-category-edit')) {
+                        startInlineEdit(e.target.closest('.editable-container'), 'category', project);
+                    } else if (e.target.closest('.task-edit-btn')) {
+                        const taskItem = e.target.closest('li');
+                        const taskIndex = parseInt(taskItem.dataset.taskIndex);
+                        startTaskEdit(taskItem, taskIndex, project);
+                    } else if (e.target.closest('.task-delete-btn')) {
+                        const taskItem = e.target.closest('li');
+                        const taskIndex = parseInt(taskItem.dataset.taskIndex);
+                        const task = project.tasks[taskIndex];
+                        if (confirm(`Are you sure you want to delete the task "${task.text}"?`)) {
+                            project.tasks.splice(taskIndex, 1);
+                            saveProjects(); renderProjects();
+                        }
+                    } else if (e.target.closest('.progress-edit-btn')) {
+                        const entryContainer = e.target.closest('.progress-entry-container');
+                        const entryIndex = parseInt(entryContainer.dataset.entryIndex);
+                        startProgressEdit(entryContainer, entryIndex, project);
+                    } else if (e.target.closest('.progress-delete-btn')) {
+                        const entryContainer = e.target.closest('.progress-entry-container');
+                        const entryIndex = parseInt(entryContainer.dataset.entryIndex);
+                        const entry = project.progress[entryIndex];
+                        if (confirm(`Are you sure you want to delete this progress entry from "${entry.date}"?`)) {
+                            project.progress.splice(entryIndex, 1);
+                            saveProjects(); renderProjects();
+                        }
+                    } else if (e.target.closest('.save-edit')) {
+                        handleSaveEdit(e.target, project);
+                    } else if (e.target.closest('.cancel-edit')) {
+                        handleCancelEdit(e.target);
+                    }
                 });
 
                 projectDashboard.addEventListener('submit', e => {
@@ -355,14 +541,25 @@
                     const card = e.target.closest('.project-card');
                     if (!card) return;
                     const project = projects.find(p => p.id === parseInt(card.dataset.id));
-                    const input = e.target.querySelector('.text-input');
-                    if (!input || !input.value.trim()) return;
-
+                    
                     if (e.target.classList.contains('task-form')) {
-                        project.tasks.push({ text: input.value, completed: false });
+                        const textInput = e.target.querySelector('.text-input');
+                        const dateInput = e.target.querySelector('.date-input');
+                        if (!textInput || !textInput.value.trim()) return;
+                        
+                        project.tasks.push({ 
+                            text: textInput.value, 
+                            completed: false, 
+                            date: dateInput.value || null 
+                        });
+                        textInput.value = '';
+                        dateInput.value = '';
                     } else if (e.target.classList.contains('progress-form')) {
+                        const input = e.target.querySelector('.text-input');
+                        if (!input || !input.value.trim()) return;
                         const today = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
                         project.progress.unshift({ date: today, note: input.value });
+                        input.value = '';
                     }
                     saveProjects(); renderProjects();
                 });
@@ -398,6 +595,151 @@
                     };
                     reader.readAsText(file);
                 });
+
+                // Keyboard event handling for inline editing
+                projectDashboard.addEventListener('keydown', e => {
+                    if (e.target.matches('.inline-edit input') || e.target.matches('.task-edit-form input')) {
+                        const card = e.target.closest('.project-card');
+                        const project = projects.find(p => p.id === parseInt(card.dataset.id));
+                        
+                        if (e.key === 'Enter') {
+                            e.preventDefault();
+                            const saveBtn = e.target.closest('.inline-edit, .task-edit-form').querySelector('.save-edit');
+                            handleSaveEdit(saveBtn, project);
+                        } else if (e.key === 'Escape') {
+                            e.preventDefault();
+                            const cancelBtn = e.target.closest('.inline-edit, .task-edit-form').querySelector('.cancel-edit');
+                            handleCancelEdit(cancelBtn);
+                        }
+                    }
+                });
+            };
+
+            const startInlineEdit = (container, field, project) => {
+                const inlineEdit = container.querySelector('.inline-edit');
+                const input = inlineEdit.querySelector('input');
+                inlineEdit.classList.add('editing');
+                input.focus();
+                input.select();
+                input.dataset.field = field;
+                input.dataset.projectId = project.id;
+            };
+
+            const startTaskEdit = (taskItem, taskIndex, project) => {
+                const editForm = taskItem.querySelector('.task-edit-form');
+                const textInput = editForm.querySelector('input[type="text"]');
+                const dateInput = editForm.querySelector('input[type="date"]');
+                
+                editForm.classList.add('editing');
+                textInput.focus();
+                textInput.select();
+                
+                textInput.dataset.taskIndex = taskIndex;
+                textInput.dataset.projectId = project.id;
+                dateInput.dataset.taskIndex = taskIndex;
+                dateInput.dataset.projectId = project.id;
+            };
+
+            const startProgressEdit = (entryContainer, entryIndex, project) => {
+                const dateEdit = entryContainer.querySelectorAll('.inline-edit')[0];
+                const noteEdit = entryContainer.querySelectorAll('.inline-edit')[1];
+                const dateInput = dateEdit.querySelector('input');
+                const noteInput = noteEdit.querySelector('input');
+                
+                dateEdit.classList.add('editing');
+                noteEdit.classList.add('editing');
+                
+                dateInput.dataset.field = 'date';
+                dateInput.dataset.entryIndex = entryIndex;
+                dateInput.dataset.projectId = project.id;
+                
+                noteInput.dataset.field = 'note';
+                noteInput.dataset.entryIndex = entryIndex;
+                noteInput.dataset.projectId = project.id;
+                
+                dateInput.focus();
+                dateInput.select();
+            };
+
+            const handleSaveEdit = (saveBtn, project) => {
+                const editForm = saveBtn.closest('.task-edit-form');
+                if (editForm) {
+                    // Handle task editing
+                    const textInput = editForm.querySelector('input[type="text"]');
+                    const dateInput = editForm.querySelector('input[type="date"]');
+                    const newText = textInput.value.trim();
+                    const newDate = dateInput.value || null;
+                    
+                    if (!newText) return;
+                    
+                    const taskIndex = parseInt(textInput.dataset.taskIndex);
+                    project.tasks[taskIndex].text = newText;
+                    project.tasks[taskIndex].date = newDate;
+                    
+                    editForm.classList.remove('editing');
+                } else {
+                    // Handle other edits (project name, category, progress)
+                    const inlineEdit = saveBtn.closest('.inline-edit');
+                    const input = inlineEdit.querySelector('input');
+                    const newValue = input.value.trim();
+                    
+                    if (!newValue) return;
+                    
+                    if (input.dataset.field === 'name') {
+                        project.name = newValue;
+                    } else if (input.dataset.field === 'category') {
+                        project.category = newValue;
+                    } else if (input.dataset.entryIndex !== undefined) {
+                        const entryIndex = parseInt(input.dataset.entryIndex);
+                        if (input.dataset.field === 'date') {
+                            project.progress[entryIndex].date = newValue;
+                        } else if (input.dataset.field === 'note') {
+                            project.progress[entryIndex].note = newValue;
+                        }
+                    }
+                    
+                    inlineEdit.classList.remove('editing');
+                }
+                
+                saveProjects();
+                renderProjects();
+            };
+
+            const handleCancelEdit = (cancelBtn) => {
+                const editForm = cancelBtn.closest('.task-edit-form');
+                if (editForm) {
+                    // Handle task edit cancellation
+                    const taskItem = editForm.closest('li');
+                    const taskIndex = parseInt(taskItem.dataset.taskIndex);
+                    const project = projects.find(p => p.id === parseInt(taskItem.closest('.project-card').dataset.id));
+                    const task = project.tasks[taskIndex];
+                    
+                    const textInput = editForm.querySelector('input[type="text"]');
+                    const dateInput = editForm.querySelector('input[type="date"]');
+                    
+                    textInput.value = task.text;
+                    dateInput.value = task.date || '';
+                    
+                    editForm.classList.remove('editing');
+                } else {
+                    // Handle other edit cancellations
+                    const inlineEdit = cancelBtn.closest('.inline-edit');
+                    const container = inlineEdit.closest('.editable-container, .task-item-container, .progress-entry-container');
+                    
+                    const input = inlineEdit.querySelector('input');
+                    const editableText = container.querySelector('.editable-text');
+                    if (editableText) {
+                        input.value = editableText.textContent;
+                    }
+                    
+                    inlineEdit.classList.remove('editing');
+                    
+                    if (container.classList.contains('progress-entry-container')) {
+                        container.querySelectorAll('.inline-edit').forEach(edit => {
+                            edit.classList.remove('editing');
+                        });
+                    }
+                }
             };
 
             const init = () => {
